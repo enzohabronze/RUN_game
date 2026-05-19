@@ -1,0 +1,135 @@
+﻿<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Cart Runner</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <canvas id="game" aria-label="Cart Runner game canvas"></canvas>
+
+      <section id="mainMenu" class="overlay menu-screen overlay--active">
+        <h1 class="screen-title" id="menuTitle">CART RUNNER</h1>
+        <div class="menu-actions">
+          <button id="startButton" class="primary">РРіСЂР°С‚СЊ</button>
+          <button id="howButton" class="secondary">РЈРїСЂР°РІР»РµРЅРёРµ</button>
+          <div id="levelTestGrid" class="level-test-grid" aria-label="Тестовый выбор уровня"></div>
+        </div>
+      </section>
+
+      <section id="pauseMenu" class="overlay action-screen">
+        <h1 class="screen-title" id="pauseTitle">РџРђРЈР—Рђ</h1>
+        <div class="panel action-panel">
+          <p class="kicker">РџР°СѓР·Р°</p>
+          <h2>РњР°СЂС€СЂСѓС‚ РїСЂРёРѕСЃС‚Р°РЅРѕРІР»РµРЅ</h2>
+          <button id="resumeButton" class="primary">РџСЂРѕРґРѕР»Р¶РёС‚СЊ</button>
+          <button id="restartFromPauseButton" class="secondary">РќР°С‡Р°С‚СЊ Р·Р°РЅРѕРІРѕ</button>
+          <button id="pauseBackToMenuButton" class="secondary">Р“Р›РђР’РќРћР• РњР•РќР®</button>
+        </div>
+      </section>
+
+      <section id="gameOverMenu" class="overlay action-screen">
+        <h1 class="screen-title" id="gameOverTitle">РџРћРўР РђР§Р•РќРћ</h1>
+        <div class="panel action-panel">
+          <button id="restartButton" class="primary">Р•С‰Рµ РїРѕРїС‹С‚РєР°</button>
+          <button id="backToMenuButton" class="secondary">Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ</button>
+        </div>
+      </section>
+
+      <section id="levelCompleteMenu" class="overlay action-screen">
+        <h1 class="screen-title" id="levelCompleteTitle">РњРћР›РћР”Р•Р¦</h1>
+        <div id="starsText" class="stars stars--large">в… в… в…</div>
+        <div class="panel action-panel">
+          <p class="kicker">РС‚РѕРіРё СѓСЂРѕРІРЅСЏ</p>
+          <h2 class="legacy-screen-copy">РњР°СЂС€СЂСѓС‚ РїСЂРѕР№РґРµРЅ</h2>
+          <p id="levelStats" class="summary"></p>
+          <button id="nextLevelButton" class="primary">РџРµСЂРµР№С‚Рё РЅР° СЃР»РµРґСѓСЋС‰РёР№ СѓСЂРѕРІРµРЅСЊ</button>
+          <button id="replayLevelButton" class="secondary">РџРµСЂРµРёРіСЂР°С‚СЊ СѓСЂРѕРІРµРЅСЊ</button>
+          <button id="completeBackToMenuButton" class="secondary">Р“Р›РђР’РќРћР• РњР•РќР®</button>
+        </div>
+      </section>
+
+      <section id="howMenu" class="overlay">
+        <div class="panel">
+          <p class="kicker">РЈРїСЂР°РІР»РµРЅРёРµ</p>
+          <h2>РљР»Р°РІРёР°С‚СѓСЂР° Рё С‚РµР»РµС„РѕРЅ</h2>
+          <p class="summary">РЎРІР°Р№Рї РІР»РµРІРѕ/РІРїСЂР°РІРѕ РёР»Рё СЃС‚СЂРµР»РєРё РјРµРЅСЏСЋС‚ РїРѕР»РѕСЃСѓ. РџСЂРѕР±РµР» Рё РєРЅРѕРїРєР° СЃРІРµСЂС…Сѓ СЃС‚Р°РІСЏС‚ РёРіСЂСѓ РЅР° РїР°СѓР·Сѓ.</p>
+          <button id="closeHowButton" class="primary">РџРѕРЅСЏС‚РЅРѕ</button>
+        </div>
+      </section>
+
+      <template id="futureCharacterSelectTemplate">
+        <section class="overlay" data-future-screen="character-select">
+          <div class="panel">
+            <p class="kicker">РџРµСЂСЃРѕРЅР°Р¶</p>
+            <h2>Р’С‹Р±РѕСЂ РїРµСЂСЃРѕРЅР°Р¶Р°</h2>
+            <div data-future-character-list></div>
+          </div>
+        </section>
+      </template>
+
+      <template id="futureLeaderboardTemplate">
+        <section class="overlay" data-future-screen="leaderboard">
+          <div class="panel">
+            <p class="kicker">Р РµРєРѕСЂРґС‹</p>
+            <h2>РўР°Р±Р»РёС†Р° СЂРµРєРѕСЂРґРѕРІ</h2>
+            <div data-future-leaderboard-list></div>
+          </div>
+        </section>
+      </template>
+
+      <template id="futureLevelSelectTemplate">
+        <section class="overlay" data-future-screen="level-select">
+          <div class="panel">
+            <p class="kicker">РЈСЂРѕРІРЅРё</p>
+            <h2>Р’С‹Р±РѕСЂ СѓСЂРѕРІРЅСЏ</h2>
+            <div data-future-level-list></div>
+          </div>
+        </section>
+      </template>
+
+      <div class="hud" aria-hidden="true">
+        <div class="hud-row hud-row--top">
+          <div class="stat">
+            <img id="cargoIcon" class="stat-icon" alt="" />
+            <div>
+              <span>Р“СЂСѓР·</span>
+              <strong id="cargoText">100%</strong>
+              <div class="cargo-meter"><div id="cargoFill"></div></div>
+            </div>
+          </div>
+          <button id="soundButton" class="icon-button audio-button" title="Sound">ON</button>
+          <button id="pauseButton" class="icon-button" title="РџР°СѓР·Р°"><img id="pauseIcon" alt="" /></button>
+        </div>
+        <div class="hud-row">
+          <div class="stat wide">
+            <img id="itemsIcon" class="stat-icon" alt="" />
+            <div>
+              <span>РЎРѕР±СЂР°РЅРѕ</span>
+              <strong id="itemsText">0/8</strong>
+            </div>
+          </div>
+          <div class="stat wide">
+            <img id="routeIcon" class="stat-icon" alt="" />
+            <div>
+              <span>РњР°СЂС€СЂСѓС‚</span>
+              <strong id="distanceText">0 Рј</strong>
+            </div>
+          </div>
+          <div class="stat wide">
+            <img id="levelIcon" class="stat-icon" alt="" />
+            <div>
+              <span>РЈСЂРѕРІРµРЅСЊ</span>
+              <strong id="levelText">1</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
